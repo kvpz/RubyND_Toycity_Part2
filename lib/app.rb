@@ -6,9 +6,17 @@ products_hash = JSON.parse(file)
 # Print "Sales Report" in ascii art
 
 # Print today's date
+time = Time.new
+puts time.strftime("%B %d, %Y")
 
 # Print "Products" in ascii art
-
+puts ""
+puts " _ _   _ _     _ _    _ _           _   _ _ _  _          "
+puts "|   \\ |   \\   /   \\  |   \\ |    |  /  \\   |   / \\   "
+puts "| _ / |_  /  /     \\ |   | |    |  |      |  |           "
+puts "|     |  \\   \\     / |   | |    |  |      |   \\        "
+puts "|     |   \\   \\_ _/  |_ _/  \\_ _/  \\_ /   |  \\_/     "
+puts ""
 # For each product in the data set:
 	# Print the name of the toy
 	# Print the retail price of the toy
