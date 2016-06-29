@@ -55,11 +55,11 @@ end # get_brands()
 def create_report
   # Print "Sales Report" in ascii art
   $report_file.puts ""
-  $report_file.puts "/"
-  $report_file.puts "|"
-  $report_file.puts "\\ _"
-  $report_file.puts "   |"
-  $report_file.puts "_ _/"
+  $report_file.puts "/- -\\      /     |      |= = = /- -\\   |--\\  |= = = |- -\\ /- -\\ |--\\ = = =           "
+  $report_file.puts "|         / \\    |      |     |        |  /  |      |   | |   | |  /   |"
+  $report_file.puts "\\__      /- -\\   |      |= =   \\_      |-/   |= =   | _ / |   | |-/    |    "
+  $report_file.puts "    \\   /     \\  |      |          \\   |\\    |      |     |   | |\\     |"
+  $report_file.puts "\\- -/  /       \\ |===== |= = = \\- -/   | \\   |= = = |     \\- -/ | \\    |  "
   $report_file.puts ""
 
   # Print today's date
@@ -68,11 +68,11 @@ def create_report
 
   # Print "Products" in ascii art
   $report_file.puts ""
-  $report_file.puts " _ _   _ _     _ _    _ _           _   _ _ _       "
-  $report_file.puts "|   \\ |   \\   /   \\  |   \\ |    |  /  \\   |   /-\\   "
-  $report_file.puts "| _ / |_  /  /     \\ |   | |    |  |      |  |           "
-  $report_file.puts "|     |  \\   \\     / |   | |    |  |      |   \\        "
-  $report_file.puts "|     |   \\   \\_ _/  |_ _/  \\_ _/  \\ _/   |  \\-/     "
+  $report_file.puts " _ _   _ _     _ _    _ _           _   _ _ _  /- -\\   "
+  $report_file.puts "|   \\ |   \\   /   \\  |   \\ |    |  /  \\   |    |"
+  $report_file.puts "| _ / |_  /  /     \\ |   | |    |  |      |     \\__       "
+  $report_file.puts "|     |  \\   \\     / |   | |    |  |      |         \\    "
+  $report_file.puts "|     |   \\   \\_ _/  |_ _/  \\_ _/  \\ _/   |     \\- -/"
   $report_file.puts ""
 
   # For each product in the data set:
