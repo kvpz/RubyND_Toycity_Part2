@@ -122,26 +122,38 @@ def create_report
   currentBrand = brands_available[itr_brands]
   stock = 0
   distinct_toy_count = 0
+  total_price = 0
+  sales_volume = 0
   products_by_brand.each do |toy|
     if(toy["brand"].eql?currentBrand)
-      stock += toy["stock"].to_i
+      stock += toy['stock'].to_i
       distinct_toy_count += 1
+      total_price += toy["full-price"].to_f
+      toy['purchases'].each do |purch|
+        sales_volume += purch['price']
+      end
     else
-      puts "~~~ #{currentBrand} ~~~"
-      puts "Stock: #{stock}"
-      puts "Toys in stock: #{distinct_toy_count}"
-
+      $report_file.puts "~~~ #{currentBrand} ~~~"
+      $report_file.puts "Stock: #{stock}"
+      average_price = total_price.round(2)/distinct_toy_count
+      $report_file.puts "Average price of toys: #{average_price}"
+      $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
       currentBrand = toy["brand"]
       stock = toy["stock"].to_i
       distinct_toy_count = 1
+      total_price = toy["full-price"].to_f
+      sales_volume = 0
+      toy['purchases'].each do |purch|
+        sales_volume += purch['price']
+      end
     end
   end
-  # writing final brand info
-  puts ""
-  puts "~~~ #{currentBrand} ~~~"
-  puts "Stock: #{stock}"
-  puts "Toys in stock: #{distinct_toy_count}"
-
+  # writing info for final brand
+  $report_file.puts ""
+  $report_file.puts "~~~ #{currentBrand} ~~~"
+  $report_file.puts "Stock: #{stock}"
+  $report_file.puts "Average price of toys: #{total_price.round(2)/distinct_toy_count}"
+  $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
 end # create_report()
 
 
