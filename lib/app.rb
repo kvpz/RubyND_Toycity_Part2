@@ -13,19 +13,22 @@ def setup_files
   $report_file = File.new("report.txt", "w+") #w+ allows reading/writing to file
 end
 
+# takes an array of as a parameter
 def total_number_of_purchases(toyPurchases)
   toyPurchases.count
 end
 
+# takes a parameter of an array of hashes
 def total_amount_of_sales(toyPurchases)
   toyPurchases.inject(0){|sum, addit| sum.to_f + addit["price"].to_f}
 end
 
+# takes a parameter of array of hashes
 def avg_selling_price(toyPurchases)
   total_amount_of_sales(toyPurchases)/total_number_of_purchases(toyPurchases)
 end
 
-#returns an array with the amount each person saved (comparing "price" with "full-price")
+# returns an array with the amount each person saved (comparing "price" with "full-price")
 def amount_saved(retail, toyPurchases)
   individual_savings = Array.new
   toyPurchases.each do |purch|
@@ -34,11 +37,11 @@ def amount_saved(retail, toyPurchases)
   return individual_savings
 end
 
-def sort_by_brand()
+def sort_by_brand
   $products_hash["items"].sort_by{|i| i["brand"]}
 end
 
-def get_brands(products)  #complexity note: products ordered by brands
+def get_brands(products)  #complexity note: 'products' is ordered by brands
   first_product = products[0]
   brands = Array.new(1,first_product["brand"]) # to store all brand names (alphabetical order)
   itr = 0 # used to iterate though the array brands_available
@@ -83,21 +86,21 @@ def create_report
   # Calculate and print the average price the toy sold for
   # Calculate and print the average discount (% or $) based off the average sales price
 
-  $products_hash["items"].each do |toy|
-    toyName = toy["title"]
-    retailPrice = toy["full-price"].to_f
-    amount_sold = total_number_of_purchases(toy["purchases"])
-    sales_Profit = total_amount_of_sales(toy["purchases"]).to_f
-    average_sale = avg_selling_price(toy["purchases"])
-    averageDiscount_dollars = (retailPrice*amount_sold - sales_Profit)/amount_sold;
+  $products_hash['items'].each do |toy|
+    toyName = toy['title']
+    retailPrice = toy['full-price'].to_f
+    amount_of_purchases = total_number_of_purchases(toy['purchases'])
+    sales_Profit = total_amount_of_sales(toy['purchases']).to_f
+    average_sale = avg_selling_price(toy['purchases'])
+    averageDiscount_dollars = (retailPrice*amount_of_purchases - sales_Profit)/amount_of_purchases;
     averageDiscount_percentage = (averageDiscount_dollars/retailPrice)*100
     $report_file.puts "~~~ #{toyName} ~~~"
     $report_file.puts "Retail price: #{retailPrice}"
-    $report_file.puts "Total number of purchases: #{amount_sold}"
+    $report_file.puts "Total number of purchases: #{amount_of_purchases}"
     $report_file.puts "Total amount of sales: #{sales_Profit}"
     $report_file.puts "Average price sold for: #{average_sale}"
     $report_file.puts "Average discount: $#{averageDiscount_dollars} (or %#{averageDiscount_percentage.round(2)})"
-    $report_file.puts ""
+    $report_file.puts ''
   end
 
   # Print "Brands" in ascii art (by Udacity's Ruby Nanodegree crew)
@@ -107,7 +110,7 @@ def create_report
   $report_file.puts "| '_ \\| '__/ _` | '_ \\ / _` / __|"
   $report_file.puts "| |_) | | | (_| | | | | (_| \\__ \\"
   $report_file.puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
-  $report_file.puts ""
+  $report_file.puts ''
 
   # For each brand in the data set:
   # Print the name of the brand
@@ -116,41 +119,40 @@ def create_report
   # Calculate and print the total sales volume of all the brand's toys combined
 
   # obtain an array containing the list of items sorted by brand
-  products_by_brand = sort_by_brand() # array of products ordered by brand
+  products_by_brand = sort_by_brand # array of products ordered by brand
   brands_available = get_brands(products_by_brand)
-  itr_brands = 0 # used to iterated though names of brands(_available)
-  currentBrand = brands_available[itr_brands]
+  current_brand = brands_available[0]
   stock = 0
   distinct_toy_count = 0
   total_price = 0
   sales_volume = 0
   products_by_brand.each do |toy|
-    if(toy["brand"].eql?currentBrand)
+    if(toy['brand'].eql?current_brand)
       stock += toy['stock'].to_i
       distinct_toy_count += 1
-      total_price += toy["full-price"].to_f
-      toy['purchases'].each do |purch|
-        sales_volume += purch['price']
+      total_price += toy['full-price'].to_f
+      toy['purchases'].each do |purchase|
+        sales_volume += purchase['price']
       end
-    else
-      $report_file.puts "~~~ #{currentBrand} ~~~"
+    else # encountering new brand info
+      $report_file.puts "~~~ #{current_brand} ~~~"
       $report_file.puts "Stock: #{stock}"
       average_price = total_price.round(2)/distinct_toy_count
       $report_file.puts "Average price of toys: #{average_price}"
       $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
-      currentBrand = toy["brand"]
-      stock = toy["stock"].to_i
+      current_brand = toy['brand']
+      stock = toy['stock'].to_i
       distinct_toy_count = 1
-      total_price = toy["full-price"].to_f
+      total_price = toy['full-price'].to_f
       sales_volume = 0
-      toy['purchases'].each do |purch|
-        sales_volume += purch['price']
+      toy['purchases'].each do |purchase|
+        sales_volume += purchase['price']
       end
     end
   end
   # writing info for final brand
-  $report_file.puts ""
-  $report_file.puts "~~~ #{currentBrand} ~~~"
+  $report_file.puts ''
+  $report_file.puts "~~~ #{current_brand} ~~~"
   $report_file.puts "Stock: #{stock}"
   $report_file.puts "Average price of toys: #{total_price.round(2)/distinct_toy_count}"
   $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
