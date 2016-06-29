@@ -1,0 +1,53 @@
+commit 445401023182d036b88c9bab6f98ca06c01252df
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Wed Jun 29 18:32:35 2016 -0400
+
+    remoted variable to iterate through brands_available.
+
+commit fb94144e76300115f3e32ee7f704667848a1caf5
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Wed Jun 29 12:32:20 2016 -0400
+
+    Finished ascii art "SALES REPORT"
+
+commit 7fa56bfedfa2321715e85e0e2886474ddcdee2da
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Wed Jun 29 10:28:37 2016 -0400
+
+    Completed displaying brand info
+
+commit 1ad059b2aef266788329685b94498251f92e4f81
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jun 28 23:35:25 2016 -0400
+
+    Successful calculation of total stock per brand.
+
+commit db7121e9921e971029bd7ebbe13debb27a421bf9
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jun 28 22:25:43 2016 -0400
+
+    created function get_brands(products)
+
+commit dc797621bbda21af9d382aa689d984d286ad8ea7
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jun 28 22:12:37 2016 -0400
+
+    moved things within create_report function. Now writing to file.
+
+commit 57084907c312a31203ed34dea0ab8c599f2cac8b
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jun 28 21:03:50 2016 -0400
+
+    implemented first set of requirements
+
+commit 58a6d1cd2aeacd66032592d9dcf386aa620029f4
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jun 28 10:50:24 2016 -0400
+
+    printed date & ascii art(need help on art)
+
+commit 9f5451b141d0ffc5c8843d2182aac8257a7794e3
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jun 28 09:49:05 2016 -0400
+
+    first commit (adding starter code)
