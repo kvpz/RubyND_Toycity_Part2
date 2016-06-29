@@ -38,6 +38,20 @@ def sort_by_brand()
   $products_hash["items"].sort_by{|i| i["brand"]}
 end
 
+def get_brands(products)  #complexity note: products ordered by brands
+  first_product = products[0]
+  brands = Array.new(0,first_product["brand"]) # to store all brand names (alphabetical order)
+  itr = 0 # used to iterate though the array brands_available
+  products.each do |toy|
+    currentBrand = toy["brand"]
+    if(currentBrand != brands[itr])
+      itr += 1
+      brands[itr] = currentBrand
+    end
+  end
+  return brands
+end # get_brands()
+
 def create_report
   # Print "Sales Report" in ascii art
   $report_file.puts ""
@@ -102,22 +116,11 @@ def create_report
   # Calculate and print the total sales volume of all the brand's toys combined
 
   # obtain an array containing the list of items sorted by brand
-  products_by_brand = sort_by_brand()
-  brands_available = Array.new(0,products_by_brand[0]["brand"]) # to store all brand names (alphabetical order)
-  itr = 0 # used to iterate though the array brands_available
-  products_by_brand.each do |toy|
-    currentBrand = toy["brand"]
-    if(currentBrand != brands_available[itr])
-      itr += 1
-      brands_available[itr] = currentBrand
-    end
-  end
+  products_by_brand = sort_by_brand() # array of products ordered by brand
+  brands_available = get_brands(products_by_brand)
+
   puts brands_available
-
-end #create_report
-
-
-
+end # create_report()
 
 
 def start
