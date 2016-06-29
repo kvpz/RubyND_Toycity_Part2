@@ -40,7 +40,7 @@ end
 
 def get_brands(products)  #complexity note: products ordered by brands
   first_product = products[0]
-  brands = Array.new(0,first_product["brand"]) # to store all brand names (alphabetical order)
+  brands = Array.new(1,first_product["brand"]) # to store all brand names (alphabetical order)
   itr = 0 # used to iterate though the array brands_available
   products.each do |toy|
     currentBrand = toy["brand"]
@@ -118,8 +118,30 @@ def create_report
   # obtain an array containing the list of items sorted by brand
   products_by_brand = sort_by_brand() # array of products ordered by brand
   brands_available = get_brands(products_by_brand)
+  itr_brands = 0 # used to iterated though names of brands(_available)
+  currentBrand = brands_available[itr_brands]
+  stock = 0
+  distinct_toy_count = 0
+  products_by_brand.each do |toy|
+    if(toy["brand"].eql?currentBrand)
+      stock += toy["stock"].to_i
+      distinct_toy_count += 1
+    else
+      puts "~~~ #{currentBrand} ~~~"
+      puts "Stock: #{stock}"
+      puts "Toys in stock: #{distinct_toy_count}"
 
-  puts brands_available
+      currentBrand = toy["brand"]
+      stock = toy["stock"].to_i
+      distinct_toy_count = 1
+    end
+  end
+  # writing final brand info
+  puts ""
+  puts "~~~ #{currentBrand} ~~~"
+  puts "Stock: #{stock}"
+  puts "Toys in stock: #{distinct_toy_count}"
+
 end # create_report()
 
 
