@@ -106,46 +106,53 @@ def generate_products_report
   end
 end
 
+def sum_toy_sales(toy)
+  volume = 0
+  toy['purchases'].each do |purchase|
+    volume += purchase['price']
+  end
+  return volume
+end
+
 #note: it is assumed JSON file is not empty
 def generate_brands_report
-  # obtain an array containing the list of items sorted by brand
-  products_by_brand = sort_by_brand # array of products ($products_hash) odered by brand
+  # declaring/ initializing variables
+  products_by_brand = sort_by_brand # array of products ($products_hash) ordered by brand
   brands_available = get_brands(products_by_brand)
   current_brand = brands_available[0]
   stock = 0
-  distinct_toy_count = 0
-  total_revenue = 0
+  distinct_toy_count = 0 # used to calculate average retail price for a brand's toy
+  full_price_sum = 0
   sales_volume = 0
 
   products_by_brand.each do |toy|
     if(toy['brand'].eql?current_brand)
       stock += toy['stock'].to_i
       distinct_toy_count += 1
-      total_revenue += toy['full-price'].to_f
+      full_price_sum += toy['full-price'].to_f
+      sales_volume += sum_toy_sales(toy)
+=begin
       toy['purchases'].each do |purchase|
         sales_volume += purchase['price']
       end
+=end
     else # encountering new brand info
       $report_file.puts "~~~ #{current_brand} ~~~"
       $report_file.puts "Stock: #{stock}"
-      average_price = total_price.round(2)/distinct_toy_count
-      $report_file.puts "Average price of toys: #{average_price}"
+      $report_file.puts "Average price of toys: #{full_price_sum.round(2)/distinct_toy_count}"
       $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
       current_brand = toy['brand']
       stock = toy['stock'].to_i
-      distinct_toy_count = 1
-      total_revenue = toy['full-price'].to_f
-      sales_volume = 0
-      toy['purchases'].each do |purchase|
-        sales_volume += purchase['price']
-      end
-    end
+      distinct_toy_count = 1 # resetting since new brand
+      full_price_sum = toy['full-price'].to_f
+      sales_volume = sum_toy_sales(toy) # reset for new brand
+    end # if-else
   end
   # writing info for final brand
   $report_file.puts ''
   $report_file.puts "~~~ #{current_brand} ~~~"
   $report_file.puts "Stock: #{stock}"
-  $report_file.puts "Average price of toys: #{total_revenue.round(2)/distinct_toy_count}"
+  $report_file.puts "Average price of toys: #{full_price_sum.round(2)/distinct_toy_count}"
   $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
 end
 
