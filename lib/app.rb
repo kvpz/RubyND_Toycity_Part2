@@ -57,24 +57,27 @@ end # get_brands()
 
 def print_SalesReport_in_ascii
   # Print "Sales Report" in ascii art
-  $report_file.puts ""
-  $report_file.puts "/- -\\      /     |      |= = = /- -\\   |--\\  |= = = |- -\\ /- -\\ |--\\ = = =           "
-  $report_file.puts "|         / \\    |      |     |        |  /  |      |   | |   | |  /   |"
-  $report_file.puts "\\__      /- -\\   |      |= =   \\_      |-/   |= =   | _ / |   | |-/    |    "
-  $report_file.puts "    \\   /     \\  |      |          \\   |\\    |      |     |   | |\\     |"
-  $report_file.puts "\\- -/  /       \\ |===== |= = = \\- -/   | \\   |= = = |     \\- -/ | \\    |  "
-  $report_file.puts ""
+  $report_file.puts"  _____       _            _____                       _"
+  $report_file.puts" / ____|     | |          |  __ \\                     | |"
+  $report_file.puts"| (___   __ _| | ___ ___  | |__) |___ _ __   ___  _ __| |_"
+  $report_file.puts" \\___ \\ / _` | |/ _ \\ __| |  _  // _ \\ '_ \\ / _ \\| '__| __|"
+  $report_file.puts" ____) | (_| | |  __\\__ \\ | | \\ \\  __/ |_) | (_) | |  | |_"
+  $report_file.puts"|_____/ \\__,_|_|\\___|___/ |_|  \\_\\___| .__/ \\___/|_|   \\__|"
+  $report_file.puts"                                    | |                   "
+  $report_file.puts"                                    |_|"
+
 end
 
 def print_Products_in_ascii
   # Print "Products" in ascii art
-  $report_file.puts ""
-  $report_file.puts " _ _   _ _     _ _    _ _           _   _ _ _  /- -\\   "
-  $report_file.puts "|   \\ |   \\   /   \\  |   \\ |    |  /  \\   |    |"
-  $report_file.puts "| _ / |_  /  /     \\ |   | |    |  |      |     \\__       "
-  $report_file.puts "|     |  \\   \\     / |   | |    |  |      |         \\    "
-  $report_file.puts "|     |   \\   \\_ _/  |_ _/  \\_ _/  \\ _/   |     \\- -/"
-  $report_file.puts ""
+  $report_file.puts "                     _            _       "
+  $report_file.puts "                    | |          | |      "
+  $report_file.puts " _ __  _ __ ___   __| |_   _  ___| |_ ___ "
+  $report_file.puts "| '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|"
+  $report_file.puts "| |_) | | | (_) | (_| | |_| | (__| |_\\__ \\"
+  $report_file.puts "| .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/"
+  $report_file.puts "| |                                       "
+  $report_file.puts "|_|                                       "
 end
 
 def print_Brands_in_ascii
@@ -131,11 +134,7 @@ def generate_brands_report
       distinct_toy_count += 1
       full_price_sum += toy['full-price'].to_f
       sales_volume += sum_toy_sales(toy)
-=begin
-      toy['purchases'].each do |purchase|
-        sales_volume += purchase['price']
-      end
-=end
+
     else # encountering new brand info
       $report_file.puts "~~~ #{current_brand} ~~~"
       $report_file.puts "Stock: #{stock}"
@@ -156,16 +155,20 @@ def generate_brands_report
   $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
 end
 
+def get_time
+  time = Time.new
+  time.strftime("%B %d %Y  %H:%M:%S")
+end
+
 def create_report
   # Time when report is created
-  time = Time.new
-  $report_file.puts time.strftime("%B %d, %Y")
+  $report_file.puts get_time
   print_SalesReport_in_ascii
 
   # For each product in the data set:
   # Print the name of the toy
   # Print the retail price of the toy
-  # Calculate and print the total numbr of purchases
+  # Calculate and print the total number of purchases
   # Calculate and print the total amount of sales
   # Calculate and print the average price the toy sold for
   # Calculate and print the average discount (% or $) based off the average sales price
