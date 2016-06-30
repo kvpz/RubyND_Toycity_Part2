@@ -10,7 +10,7 @@ def setup_files
   path = File.join(File.dirname(__FILE__), '../data/products.json')
   file = File.read(path)
   $products_hash = JSON.parse(file)
-  $report_file = File.new("report.txt", "w+") #w+ allows reading/writing to file
+  $report_file = File.new("../report.txt", "w+") #w+ allows reading/writing to file
 end
 
 # takes an array of as a parameter
@@ -55,7 +55,7 @@ def get_brands(products)  #complexity note: 'products' is ordered by brands
   return brands
 end # get_brands()
 
-def print_SalesReport
+def print_SalesReport_in_ascii
   # Print "Sales Report" in ascii art
   $report_file.puts ""
   $report_file.puts "/- -\\      /     |      |= = = /- -\\   |--\\  |= = = |- -\\ /- -\\ |--\\ = = =           "
@@ -66,7 +66,7 @@ def print_SalesReport
   $report_file.puts ""
 end
 
-def print_Products
+def print_Products_in_ascii
   # Print "Products" in ascii art
   $report_file.puts ""
   $report_file.puts " _ _   _ _     _ _    _ _           _   _ _ _  /- -\\   "
@@ -77,7 +77,7 @@ def print_Products
   $report_file.puts ""
 end
 
-def print_Brands
+def print_Brands_in_ascii
   # Print "Brands" in ascii art (by Udacity's Ruby Nanodegree crew)
   $report_file.puts " _                         _     "
   $report_file.puts "| |                       | |    "
@@ -88,28 +88,15 @@ def print_Brands
   $report_file.puts ''
 end
 
-def create_report
-  # Time when report is created
-  time = Time.new
-  $report_file.puts time.strftime("%B %d, %Y")
-
-  # For each product in the data set:
-  # Print the name of the toy
-  # Print the retail price of the toy
-  # Calculate and print the total number of purchases
-  # Calculate and print the total amount of sales
-  # Calculate and print the average price the toy sold for
-  # Calculate and print the average discount (% or $) based off the average sales price
-
+def generate_products_report
   $products_hash['items'].each do |toy|
-    toyName = toy['title']
     retailPrice = toy['full-price'].to_f
     amount_of_purchases = total_number_of_purchases(toy['purchases'])
     sales_Profit = total_amount_of_sales(toy['purchases']).to_f
     average_sale = avg_selling_price(toy['purchases'])
     averageDiscount_dollars = (retailPrice*amount_of_purchases - sales_Profit)/amount_of_purchases;
     averageDiscount_percentage = (averageDiscount_dollars/retailPrice)*100
-    $report_file.puts "~~~ #{toyName} ~~~"
+    $report_file.puts "~~~ #{toy['title']} ~~~"
     $report_file.puts "Retail price: #{retailPrice}"
     $report_file.puts "Total number of purchases: #{amount_of_purchases}"
     $report_file.puts "Total amount of sales: #{sales_Profit}"
@@ -117,13 +104,9 @@ def create_report
     $report_file.puts "Average discount: $#{averageDiscount_dollars} (or %#{averageDiscount_percentage.round(2)})"
     $report_file.puts ''
   end
+end
 
-  # For each brand in the data set:
-  # Print the name of the brand
-  # Count and print the number of the brand's toys we stock
-  # Calculate and print the average price of the brand's toys
-  # Calculate and print the total sales volume of all the brand's toys combined
-
+def generate_brands_report
   # obtain an array containing the list of items sorted by brand
   products_by_brand = sort_by_brand # array of products ordered by brand
   brands_available = get_brands(products_by_brand)
@@ -163,8 +146,32 @@ def create_report
   $report_file.puts "Stock: #{stock}"
   $report_file.puts "Average price of toys: #{total_price.round(2)/distinct_toy_count}"
   $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
-end # create_report()
+end
 
+def create_report
+  # Time when report is created
+  time = Time.new
+  $report_file.puts time.strftime("%B %d, %Y")
+  print_SalesReport_in_ascii
+
+  # For each product in the data set:
+  # Print the name of the toy
+  # Print the retail price of the toy
+  # Calculate and print the total numbr of purchases
+  # Calculate and print the total amount of sales
+  # Calculate and print the average price the toy sold for
+  # Calculate and print the average discount (% or $) based off the average sales price
+  print_Products_in_ascii
+  generate_products_report
+
+  # For each brand in the data set:
+  # Print the name of the brand
+  # Count and print the number of the brand's toys we stock
+  # Calculate and print the average price of the brand's toys
+  # Calculate and print the total sales volume of all the brand's toys combined
+  print_Brands_in_ascii
+  generate_brands_report
+end # create_report()
 
 def start
   setup_files # load, read, parse, and create the files
