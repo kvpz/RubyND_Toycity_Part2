@@ -55,7 +55,7 @@ def get_brands(products)  #complexity note: 'products' is ordered by brands
   return brands
 end # get_brands()
 
-def create_report
+def print_SalesReport
   # Print "Sales Report" in ascii art
   $report_file.puts ""
   $report_file.puts "/- -\\      /     |      |= = = /- -\\   |--\\  |= = = |- -\\ /- -\\ |--\\ = = =           "
@@ -64,11 +64,9 @@ def create_report
   $report_file.puts "    \\   /     \\  |      |          \\   |\\    |      |     |   | |\\     |"
   $report_file.puts "\\- -/  /       \\ |===== |= = = \\- -/   | \\   |= = = |     \\- -/ | \\    |  "
   $report_file.puts ""
+end
 
-  # Print today's date
-  time = Time.new
-  $report_file.puts time.strftime("%B %d, %Y")
-
+def print_Products
   # Print "Products" in ascii art
   $report_file.puts ""
   $report_file.puts " _ _   _ _     _ _    _ _           _   _ _ _  /- -\\   "
@@ -77,6 +75,23 @@ def create_report
   $report_file.puts "|     |  \\   \\     / |   | |    |  |      |         \\    "
   $report_file.puts "|     |   \\   \\_ _/  |_ _/  \\_ _/  \\ _/   |     \\- -/"
   $report_file.puts ""
+end
+
+def print_Brands
+  # Print "Brands" in ascii art (by Udacity's Ruby Nanodegree crew)
+  $report_file.puts " _                         _     "
+  $report_file.puts "| |                       | |    "
+  $report_file.puts "| |__  _ __ __ _ _ __   __| |___ "
+  $report_file.puts "| '_ \\| '__/ _` | '_ \\ / _` / __|"
+  $report_file.puts "| |_) | | | (_| | | | | (_| \\__ \\"
+  $report_file.puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
+  $report_file.puts ''
+end
+
+def create_report
+  # Time when report is created
+  time = Time.new
+  $report_file.puts time.strftime("%B %d, %Y")
 
   # For each product in the data set:
   # Print the name of the toy
@@ -103,15 +118,6 @@ def create_report
     $report_file.puts ''
   end
 
-  # Print "Brands" in ascii art (by Udacity's Ruby Nanodegree crew)
-  $report_file.puts " _                         _     "
-  $report_file.puts "| |                       | |    "
-  $report_file.puts "| |__  _ __ __ _ _ __   __| |___ "
-  $report_file.puts "| '_ \\| '__/ _` | '_ \\ / _` / __|"
-  $report_file.puts "| |_) | | | (_| | | | | (_| \\__ \\"
-  $report_file.puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
-  $report_file.puts ''
-
   # For each brand in the data set:
   # Print the name of the brand
   # Count and print the number of the brand's toys we stock
@@ -126,6 +132,7 @@ def create_report
   distinct_toy_count = 0
   total_price = 0
   sales_volume = 0
+
   products_by_brand.each do |toy|
     if(toy['brand'].eql?current_brand)
       stock += toy['stock'].to_i
