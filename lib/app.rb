@@ -91,6 +91,17 @@ def print_Brands_in_ascii
   $report_file.puts ''
 end
 
+def write_products_report(title, retailPrice, amount_of_purchases, sales_Profit,
+                          average_sale, averageDiscount_dollars, averageDiscount_percentage)
+  $report_file.puts "~~~ #{title} ~~~"
+  $report_file.puts "Retail price: #{retailPrice}"
+  $report_file.puts "Total number of purchases: #{amount_of_purchases}"
+  $report_file.puts "Total amount of sales: #{sales_Profit}"
+  $report_file.puts "Average price sold for: #{average_sale}"
+  $report_file.puts "Average discount: $#{averageDiscount_dollars} (or %#{averageDiscount_percentage.round(2)})"
+  $report_file.puts ''
+end
+
 def generate_products_report
   $products_hash['items'].each do |toy|
     retailPrice = toy['full-price'].to_f
@@ -99,13 +110,8 @@ def generate_products_report
     average_sale = avg_selling_price(toy['purchases'])
     averageDiscount_dollars = (retailPrice*amount_of_purchases - sales_Profit)/amount_of_purchases;
     averageDiscount_percentage = (averageDiscount_dollars/retailPrice)*100
-    $report_file.puts "~~~ #{toy['title']} ~~~"
-    $report_file.puts "Retail price: #{retailPrice}"
-    $report_file.puts "Total number of purchases: #{amount_of_purchases}"
-    $report_file.puts "Total amount of sales: #{sales_Profit}"
-    $report_file.puts "Average price sold for: #{average_sale}"
-    $report_file.puts "Average discount: $#{averageDiscount_dollars} (or %#{averageDiscount_percentage.round(2)})"
-    $report_file.puts ''
+    write_products_report(toy['title'], retailPrice, amount_of_purchases, sales_Profit,
+                              average_sale, averageDiscount_dollars, averageDiscount_percentage)
   end
 end
 
@@ -117,7 +123,14 @@ def sum_toy_sales(toy)
   return volume
 end
 
-#note: it is assumed JSON file is not empty
+def write_brands_report(current_brand, stock, full_price_sum, distinct_toy_count, sales_volume)
+  $report_file.puts "~~~ #{current_brand} ~~~"
+  $report_file.puts "Stock: #{stock}"
+  $report_file.puts "Average price of toys: #{full_price_sum.round(2)/distinct_toy_count}"
+  $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
+  $report_file.puts ''
+end
+
 def generate_brands_report
   # declaring/ initializing variables
   products_by_brand = sort_by_brand # array of products ($products_hash) ordered by brand
@@ -136,10 +149,7 @@ def generate_brands_report
       sales_volume += sum_toy_sales(toy)
 
     else # encountering new brand info
-      $report_file.puts "~~~ #{current_brand} ~~~"
-      $report_file.puts "Stock: #{stock}"
-      $report_file.puts "Average price of toys: #{full_price_sum.round(2)/distinct_toy_count}"
-      $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
+      write_brands_report(current_brand, stock, full_price_sum, distinct_toy_count, sales_volume)
       current_brand = toy['brand']
       stock = toy['stock'].to_i
       distinct_toy_count = 1 # resetting since new brand
@@ -148,11 +158,7 @@ def generate_brands_report
     end # if-else
   end
   # writing info for final brand
-  $report_file.puts ''
-  $report_file.puts "~~~ #{current_brand} ~~~"
-  $report_file.puts "Stock: #{stock}"
-  $report_file.puts "Average price of toys: #{full_price_sum.round(2)/distinct_toy_count}"
-  $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
+  write_brands_report(current_brand, stock, full_price_sum, distinct_toy_count, sales_volume)
 end
 
 def get_time
