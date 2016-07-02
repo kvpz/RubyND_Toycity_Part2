@@ -83,19 +83,9 @@ def sortByBrand
   end
 end
 
-def generate_array_brand_names(products)  #complexity note: 'products' is already ordered by brands
-  first_product = products[0]
-  brands = Array.new(1,first_product['brand']) # to store all brand names (alphabetical order)
-  itr = 0 # used to iterate though the array brands_available
-  products.each do |toy|
-    currentBrand = toy['brand']
-    if currentBrand != brands[itr]
-      itr += 1
-      brands[itr] = currentBrand
-    end
-  end
-  return brands
-end # get_brands()
+def generate_array_brand_names
+  $products_hash['items'].map {|toys| toys['brand']}.uniq
+end 
 
 def write_products_report(title, retailPrice, amount_of_purchases, sales_Profit,
                           average_sale, averageDiscount_dollars,
@@ -124,10 +114,12 @@ def generate_products_stats
 end
 
 def sum_toy_sales(toy)
-  sales_volume = 0
-  toy['purchases'].each do |purchase|
-    sales_volume += purchase['price']
-  end
+#  sales_volume = 0
+  sales_volume = toy['purchases'].inject(0){|runningTotal, item| runningTotal + item['price']}
+
+#  toy['purchases'].each do |purchase|
+#    sales_volume += purchase['price']
+#  end
   return sales_volume
 end
 
@@ -139,14 +131,9 @@ def write_brands_report(current_brand, stock, average_brand_price, sales_volume)
   $report_file.puts ''
 end
 
-def generate_brands_stats(products_brandOrdered)
-  #brands_available = generate_array_brand_names(products_brandOrdered)
-  current_brand = products_brandOrdered[0]['brand']#brands_available[0]
-  stock = 0
-  distinct_toy_count = 0 # used to calculate average retail price for a brand's toy
-  full_price_sum = 0
-  sales_volume = 0
-
+def generate_brands_stats(products_brandOrdered, stock, full_price_sum, sales_volume)
+  current_brand = products_brandOrdered[0]['brand']
+  distinct_toy_count = 0 # used in calculating average retail price for a brand's toy
   products_brandOrdered.each { |toy|
     if toy['brand'].eql? current_brand
       stock += toy['stock'].to_i
@@ -173,7 +160,6 @@ def create_report
   # Time when report is created
   $report_file.puts getTime
   print_SalesReport_in_ascii
-
   # For each product in the data set:
   # Print the name of the toy
   # Print the retail price of the toy
@@ -183,15 +169,21 @@ def create_report
   # Calculate and print the average discount (% or $) based off the average sales price
   print_Products_in_ascii
   generate_products_stats
-
   # For each brand in the data set:
   # Print the name of the brand
   # Count and print the number of the brand's toys we stock
   # Calculate and print the average price of the brand's toys
   # Calculate and print the total sales volume of all the brand's toys combined
   print_Brands_in_ascii
-  items_in_brand_order = sortByBrand
-  generate_brands_stats(items_in_brand_order)
+  #items_in_brand_order = sortByBrand
+  brands = generate_array_brand_names
+  puts brands
+  stock = 0
+  full_price_sum = 0
+  sales_volume = 0
+  items_in_brand_order.each do |toy|
+    generate_brands_stats(items_in_brand_order, stock, full_price_sum, sales_volume)
+  end
 end # create_report()
 
 def start
