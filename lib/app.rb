@@ -13,47 +13,10 @@ def setup_files
   $report_file = File.new("../report.txt", "w+") #w+ allows reading/writing to file
 end
 
-# takes an array of as a parameter
-def total_number_of_purchases(toyPurchases)
-  toyPurchases.count
+def getTime
+  time = Time.new
+  time.strftime("%B %d %Y  %H:%M:%S")
 end
-
-# takes a parameter of an array of hashes
-def total_amount_of_sales(toyPurchases)
-  toyPurchases.inject(0){|sum, addit| sum.to_f + addit["price"].to_f}
-end
-
-# takes a parameter of array of hashes
-def avg_selling_price(toyPurchases)
-  total_amount_of_sales(toyPurchases)/total_number_of_purchases(toyPurchases)
-end
-
-# returns an array with the amount each person saved (comparing "price" with "full-price")
-def amount_saved(retail, toyPurchases)
-  individual_savings = Array.new
-  toyPurchases.each do |purch|
-    individual_savings.push(retail - purch["price"])
-  end
-  return individual_savings
-end
-
-def sort_by_brand
-  $products_hash["items"].sort_by{|i| i["brand"]}
-end
-
-def get_brands(products)  #complexity note: 'products' is ordered by brands
-  first_product = products[0]
-  brands = Array.new(1,first_product["brand"]) # to store all brand names (alphabetical order)
-  itr = 0 # used to iterate though the array brands_available
-  products.each do |toy|
-    currentBrand = toy["brand"]
-    if(currentBrand != brands[itr])
-      itr += 1
-      brands[itr] = currentBrand
-    end
-  end
-  return brands
-end # get_brands()
 
 def print_SalesReport_in_ascii
   # Print "Sales Report" in ascii art
@@ -65,7 +28,6 @@ def print_SalesReport_in_ascii
   $report_file.puts"|_____/ \\__,_|_|\\___|___/ |_|  \\_\\___| .__/ \\___/|_|   \\__|"
   $report_file.puts"                                    | |                   "
   $report_file.puts"                                    |_|"
-
 end
 
 def print_Products_in_ascii
@@ -91,18 +53,64 @@ def print_Brands_in_ascii
   $report_file.puts ''
 end
 
+# takes an array of as a parameter
+def total_number_of_purchases(toyPurchases)
+  toyPurchases.count
+end
+
+# parameter is an array of hashes
+def total_amount_of_sales(toyPurchases)
+  toyPurchases.inject(0){|sum, addit| sum.to_f + addit["price"].to_f}
+end
+
+# parameter is an array of hashes
+def avg_selling_price(toyPurchases)
+  total_amount_of_sales(toyPurchases)/total_number_of_purchases(toyPurchases)
+end
+
+# returns an array with the amount each person saved (comparing "price" with "full-price")
+def amount_saved(retail, toyPurchases)
+  individual_savings = Array.new
+  toyPurchases.each do |purch|
+    individual_savings.push(retail - purch["price"])
+  end
+  return individual_savings
+end
+
+def sortByBrand
+  $products_hash['items'].sort_by do |i|
+    i['brand']
+  end
+end
+
+def get_array_of_brands(products)  #complexity note: 'products' is already ordered by brands
+  first_product = products[0]
+  brands = Array.new(1,first_product['brand']) # to store all brand names (alphabetical order)
+  itr = 0 # used to iterate though the array brands_available
+  products.each do |toy|
+    currentBrand = toy['brand']
+    if currentBrand != brands[itr]
+      itr += 1
+      brands[itr] = currentBrand
+    end
+  end
+  return brands
+end # get_brands()
+
 def write_products_report(title, retailPrice, amount_of_purchases, sales_Profit,
-                          average_sale, averageDiscount_dollars, averageDiscount_percentage)
+                          average_sale, averageDiscount_dollars,
+                          averageDiscount_percentage)
   $report_file.puts "~~~ #{title} ~~~"
   $report_file.puts "Retail price: #{retailPrice}"
   $report_file.puts "Total number of purchases: #{amount_of_purchases}"
   $report_file.puts "Total amount of sales: #{sales_Profit}"
   $report_file.puts "Average price sold for: #{average_sale}"
-  $report_file.puts "Average discount: $#{averageDiscount_dollars} (or %#{averageDiscount_percentage.round(2)})"
+  $report_file.puts "Average discount: $#{averageDiscount_dollars}
+                      (or %#{averageDiscount_percentage.round(2)})"
   $report_file.puts ''
 end
 
-def generate_products_report
+def generate_products_stats
   $products_hash['items'].each do |toy|
     retailPrice = toy['full-price'].to_f
     amount_of_purchases = total_number_of_purchases(toy['purchases'])
@@ -116,59 +124,55 @@ def generate_products_report
 end
 
 def sum_toy_sales(toy)
-  volume = 0
+  sales_volume = 0
   toy['purchases'].each do |purchase|
-    volume += purchase['price']
+    sales_volume += purchase['price']
   end
-  return volume
+  return sales_volume
 end
 
-def write_brands_report(current_brand, stock, full_price_sum, distinct_toy_count, sales_volume)
+def write_brands_report(current_brand, stock, average_brand_price, sales_volume)
   $report_file.puts "~~~ #{current_brand} ~~~"
   $report_file.puts "Stock: #{stock}"
-  $report_file.puts "Average price of toys: #{full_price_sum.round(2)/distinct_toy_count}"
+  $report_file.puts "Average price of toys: #{average_brand_price}"
   $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
   $report_file.puts ''
 end
 
-def generate_brands_report
-  # declaring/ initializing variables
-  products_by_brand = sort_by_brand # array of products ($products_hash) ordered by brand
-  brands_available = get_brands(products_by_brand)
+def generate_brands_stats(products_brandOrdered)
+  #products_brandOrdered = sort_by_brand # array of products ($products_hash) ordered by brand
+  brands_available = get_array_of_brands(products_brandOrdered)
   current_brand = brands_available[0]
   stock = 0
   distinct_toy_count = 0 # used to calculate average retail price for a brand's toy
   full_price_sum = 0
   sales_volume = 0
 
-  products_by_brand.each do |toy|
-    if(toy['brand'].eql?current_brand)
+  products_brandOrdered.each { |toy|
+    if toy['brand'].eql? current_brand
       stock += toy['stock'].to_i
       distinct_toy_count += 1
       full_price_sum += toy['full-price'].to_f
       sales_volume += sum_toy_sales(toy)
-
     else # encountering new brand info
-      write_brands_report(current_brand, stock, full_price_sum, distinct_toy_count, sales_volume)
+      average_brand_price = full_price_sum.round(2)/distinct_toy_count
+      write_brands_report(current_brand, stock, average_brand_price, sales_volume)
       current_brand = toy['brand']
       stock = toy['stock'].to_i
       distinct_toy_count = 1 # resetting since new brand
       full_price_sum = toy['full-price'].to_f
       sales_volume = sum_toy_sales(toy) # reset for new brand
     end # if-else
-  end
-  # writing info for final brand
-  write_brands_report(current_brand, stock, full_price_sum, distinct_toy_count, sales_volume)
-end
+  } #products_by_brand.each
 
-def get_time
-  time = Time.new
-  time.strftime("%B %d %Y  %H:%M:%S")
+  # writing info for final brand
+  average_brand_price = full_price_sum.round(2)/distinct_toy_count
+  write_brands_report(current_brand, stock, average_brand_price, sales_volume)
 end
 
 def create_report
   # Time when report is created
-  $report_file.puts get_time
+  $report_file.puts getTime
   print_SalesReport_in_ascii
 
   # For each product in the data set:
@@ -179,7 +183,7 @@ def create_report
   # Calculate and print the average price the toy sold for
   # Calculate and print the average discount (% or $) based off the average sales price
   print_Products_in_ascii
-  generate_products_report
+  generate_products_stats
 
   # For each brand in the data set:
   # Print the name of the brand
@@ -187,7 +191,8 @@ def create_report
   # Calculate and print the average price of the brand's toys
   # Calculate and print the total sales volume of all the brand's toys combined
   print_Brands_in_ascii
-  generate_brands_report
+  items_in_brand_order = sortByBrand
+  generate_brands_stats(items_in_brand_order)
 end # create_report()
 
 def start
