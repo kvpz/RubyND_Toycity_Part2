@@ -83,7 +83,7 @@ def sortByBrand
   end
 end
 
-def get_array_of_brands(products)  #complexity note: 'products' is already ordered by brands
+def generate_array_brand_names(products)  #complexity note: 'products' is already ordered by brands
   first_product = products[0]
   brands = Array.new(1,first_product['brand']) # to store all brand names (alphabetical order)
   itr = 0 # used to iterate though the array brands_available
@@ -140,9 +140,8 @@ def write_brands_report(current_brand, stock, average_brand_price, sales_volume)
 end
 
 def generate_brands_stats(products_brandOrdered)
-  #products_brandOrdered = sort_by_brand # array of products ($products_hash) ordered by brand
-  brands_available = get_array_of_brands(products_brandOrdered)
-  current_brand = brands_available[0]
+  #brands_available = generate_array_brand_names(products_brandOrdered)
+  current_brand = products_brandOrdered[0]['brand']#brands_available[0]
   stock = 0
   distinct_toy_count = 0 # used to calculate average retail price for a brand's toy
   full_price_sum = 0
