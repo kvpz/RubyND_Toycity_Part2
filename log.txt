@@ -1,3 +1,75 @@
+commit e47579f4f469787cda42bf042e1324211eebcaff
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Tue Jul 5 21:41:17 2016 -0400
+
+    Generating Brands write up now well organized
+
+commit bc1948894c19d95f4628af79553a5ff7db34cb45
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Sat Jul 2 01:54:40 2016 -0400
+
+    reduce generate_array_brand_names to 1 line of code
+
+commit c001121537c203e69c54f0fbbefb318de81de0cb
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Sat Jul 2 00:42:08 2016 -0400
+
+    Reducing/ improving the size of generate_brands_stats()
+
+commit 811bd4dbdbbeb0e3004945cf764eb8791dfe8ee3
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Sat Jul 2 00:31:18 2016 -0400
+
+    Function/ variable refactoring
+
+commit 12a514a80d7564b04bdfcbdfa97c9f3595a83f1d
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Fri Jul 1 07:58:43 2016 -0400
+
+    writing to report.txt file by calls to corresponding (2 new) functions
+
+commit 3672f220d7c92f02780356cded4377997864caf1
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Thu Jun 30 13:07:53 2016 -0400
+
+    Made get_time & ASCII art refined
+
+commit f5520023dd78c69ecff25be139e3b1ee212a9140
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Thu Jun 30 12:35:24 2016 -0400
+
+    Made sum_toy_sales method to get a value for sales_volume
+
+commit d3d6b6ed6d6983ef1d76c5248c88405d5c5d7a31
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Thu Jun 30 11:48:05 2016 -0400
+
+    Starting to remake generate_brands_report method. Changed var names.
+
+commit 0e5daf17ce262b274ba26d32089373f3a5235526
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Thu Jun 30 06:25:55 2016 -0400
+
+    Moved report generation for products & brands to new, respective methods
+
+commit 50cafc169cf982fe6e6446bf7b9faad72de16143
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Thu Jun 30 05:58:11 2016 -0400
+
+    ASCII art is printed by calling to appropriate methods
+
+commit 4630106a8ef443941f83ef92cd61c7c6a8b30548
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Thu Jun 30 05:22:08 2016 -0400
+
+    moved report.txt
+
+commit 1ae9d241ab953529dc45491ed5efcf603d61b54c
+Author: Kevin Perez <unknotted26@gmail.com>
+Date:   Wed Jun 29 18:37:05 2016 -0400
+
+    add log.txt with containing 'git log'
+
 commit 445401023182d036b88c9bab6f98ca06c01252df
 Author: Kevin Perez <unknotted26@gmail.com>
 Date:   Wed Jun 29 18:32:35 2016 -0400
