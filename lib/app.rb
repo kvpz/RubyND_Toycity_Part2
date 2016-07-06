@@ -85,7 +85,7 @@ end
 
 def generate_array_brand_names
   $products_hash['items'].map {|toys| toys['brand']}.uniq
-end 
+end
 
 def write_products_report(title, retailPrice, amount_of_purchases, sales_Profit,
                           average_sale, averageDiscount_dollars,
@@ -95,8 +95,7 @@ def write_products_report(title, retailPrice, amount_of_purchases, sales_Profit,
   $report_file.puts "Total number of purchases: #{amount_of_purchases}"
   $report_file.puts "Total amount of sales: #{sales_Profit}"
   $report_file.puts "Average price sold for: #{average_sale}"
-  $report_file.puts "Average discount: $#{averageDiscount_dollars}
-                      (or %#{averageDiscount_percentage.round(2)})"
+  $report_file.puts "Average discount: $#{averageDiscount_dollars} (or %#{averageDiscount_percentage.round(2)})"
   $report_file.puts ''
 end
 
@@ -123,37 +122,22 @@ def sum_toy_sales(toy)
   return sales_volume
 end
 
-def write_brands_report(current_brand, stock, average_brand_price, sales_volume)
-  $report_file.puts "~~~ #{current_brand} ~~~"
-  $report_file.puts "Stock: #{stock}"
-  $report_file.puts "Average price of toys: #{average_brand_price}"
-  $report_file.puts "Total sales volume: #{sales_volume.round(2)}"
+def write_brands_report(brand, brand_info)
+  $report_file.puts "~~~ #{brand} ~~~"
+  $report_file.puts "Stock: #{brand_info["stock"]}"
+  $report_file.puts "Average Price: $#{brand_info["averagePrice"]}"
+  $report_file.puts "Total Sales Volume: $#{brand_info["salesVolume"].round(2)}"
   $report_file.puts ''
 end
 
-def generate_brands_stats(products_brandOrdered, stock, full_price_sum, sales_volume)
-  current_brand = products_brandOrdered[0]['brand']
-  distinct_toy_count = 0 # used in calculating average retail price for a brand's toy
-  products_brandOrdered.each { |toy|
-    if toy['brand'].eql? current_brand
-      stock += toy['stock'].to_i
-      distinct_toy_count += 1
-      full_price_sum += toy['full-price'].to_f
-      sales_volume += sum_toy_sales(toy)
-    else # encountering new brand info
-      average_brand_price = full_price_sum.round(2)/distinct_toy_count
-      write_brands_report(current_brand, stock, average_brand_price, sales_volume)
-      current_brand = toy['brand']
-      stock = toy['stock'].to_i
-      distinct_toy_count = 1 # resetting since new brand
-      full_price_sum = toy['full-price'].to_f
-      sales_volume = sum_toy_sales(toy) # reset for new brand
-    end # if-else
-  } #products_by_brand.each
-
-  # writing info for final brand
-  average_brand_price = full_price_sum.round(2)/distinct_toy_count
-  write_brands_report(current_brand, stock, average_brand_price, sales_volume)
+def generate_brands_stats(brand, brand_info)
+  retailPriceAggregate = 0.0
+  brand.each do |toy|
+    brand_info["stock"] += toy["stock"]
+    brand_info["salesVolume"] += toy["purchases"].inject(0){|sum, temp| sum + temp['price']}
+    retailPriceAggregate += toy['full-price'].to_f
+  end
+  brand_info["averagePrice"] = retailPriceAggregate.round(2)/brand.count
 end
 
 def create_report
@@ -175,14 +159,16 @@ def create_report
   # Calculate and print the average price of the brand's toys
   # Calculate and print the total sales volume of all the brand's toys combined
   print_Brands_in_ascii
-  #items_in_brand_order = sortByBrand
   brands = generate_array_brand_names
-  puts brands
-  stock = 0
-  full_price_sum = 0
-  sales_volume = 0
-  items_in_brand_order.each do |toy|
-    generate_brands_stats(items_in_brand_order, stock, full_price_sum, sales_volume)
+  #brand_info = Hash.new("stock","averagePrice","salesVolume")
+  brand_info = {"stock"=>0, "averagePrice"=>0, "salesVolume"=>0}
+
+  brands.each do |brand|
+    # creating an array containing ONE brand's products/ info
+    brand = $products_hash['items'].select {|toy| toy['brand'] == brand}
+    generate_brands_stats(brand, brand_info)
+    write_brands_report(brand[0]['brand'], brand_info)
+    brand_info = {"stock"=>0, "averagePrice"=>0, "salesVolume"=>0}
   end
 end # create_report()
 
