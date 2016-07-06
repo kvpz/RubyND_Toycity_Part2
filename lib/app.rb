@@ -160,7 +160,6 @@ def create_report
   # Calculate and print the total sales volume of all the brand's toys combined
   print_Brands_in_ascii
   brands = generate_array_brand_names
-  #brand_info = Hash.new("stock","averagePrice","salesVolume")
   brand_info = {"stock"=>0, "averagePrice"=>0, "salesVolume"=>0}
 
   brands.each do |brand|
